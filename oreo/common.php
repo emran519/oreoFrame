@@ -189,12 +189,6 @@ function url($addr="",$param=[]){
     }
     return $url;
 }
-//生成模版地址
-function tplUrl($path=null){
-    $url_html_suffix = oreo\lib\Config::get('app.url_html_suffix');
-    if(empty($path))return BASE_PATH . "view/" . oreo\lib\Route::$controller . "/" . oreo\lib\Route::$action . $url_html_suffix;
-    return BASE_PATH."view/" . $path . $url_html_suffix;
-}
 //快速返回模版输出
 function view($tplPath=null,$data=null){
     \oreo\lib\View::assign($data);
