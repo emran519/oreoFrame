@@ -18,6 +18,18 @@ class Test extends Controller
         return ['code'=>200,'data'=>$res];
     }
 
+    public function insert(){
+        $data = [
+            'username'=>'test123',
+            'email'=> '123@qq.com',
+            'phone'=> '123456',
+            'type' => 1
+        ];
+        $res = Db::table('test')->field('id')->count();
+        responseType("json");
+        return ['code'=>200,'data'=>$res];
+    }
+
     //获取系统变量实例
     public function getSystem(){
         return $this->systemInfo('web_name');
@@ -74,6 +86,11 @@ class Test extends Controller
         }else{
             return json(0,'error','发送失败');
         }
+    }
+
+    public function testAbc(){
+        $a = new \oreo\extend\test\TestOreo();
+       return $a->oreo("苹果");
     }
 
 

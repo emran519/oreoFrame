@@ -3,6 +3,9 @@
 
 namespace oreo\extend;
 
+use oreo\extend\sms\qcloud\SmsSingleSender;
+use oreo\extend\sms\aliyun\AliSms;
+use oreo\extend\sms\sendmail\SendClass;
 class Sms
 {
     protected static $result;
@@ -16,7 +19,7 @@ class Sms
      * @return sms\qcloud\SmsSingleSender
      */
     public function qCloudSms(string $appId, string $appKey) {
-        $qCloud =  new \oreo\extend\sms\qcloud\SmsSingleSender($appId, $appKey);
+        $qCloud =  new SmsSingleSender($appId, $appKey);
         return self::$result = $qCloud;
     }
 
@@ -60,7 +63,7 @@ class Sms
             'signName'        => $signName,
             'templateCode'    => $templateCode
         );
-        $ali =  new \oreo\extend\sms\aliyun\AliSms($config);
+        $ali =  new AliSms($config);
         return self::$result = $ali;
     }
 
@@ -71,7 +74,7 @@ class Sms
      * @param string $param 数字验证码
      * @return mixed
      */
-    public function aliSmsParam(string $phone,string $param) {
+    public function aliSmsParam(string $phone, string $param) {
         try {
             $res = self::$result->send_verify($phone,$param);
             self::$result = null;
@@ -91,7 +94,7 @@ class Sms
      * @param string $alias     别名(可选)
      */
     public function email(string $smtp_url, int $smtp_port = 465, string $mail_name, string $mail_pass, string $alias){
-        $mail = new \oreo\extend\sms\sendmail\SendClass($smtp_url,$smtp_port,1,$mail_name,$mail_pass,$smtp_port==465?1:0);
+        $mail = new SendClass($smtp_url,$smtp_port,1,$mail_name,$mail_pass,$smtp_port==465?1:0);
         self::$mail['email_name'] = $mail_name;
         self::$mail['alias'] = $alias;
         self::$result = $mail;

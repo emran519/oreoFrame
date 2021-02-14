@@ -3,7 +3,6 @@
 namespace oreo\extend\sms\aliyun;
 /**
  * 阿里云短信验证码发送类
- * @author Oreo
  *
  */
 class AliSms {

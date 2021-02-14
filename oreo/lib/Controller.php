@@ -102,7 +102,7 @@ class Controller{
      */
 	public function admin_log(string $msg){
 		$msg = mb_substr($msg,0,150);
-		$data= ['admin_id'=>$_SESSION['admin_info']['id'],'route'=>Route::$privileges,'msg'=>htmlspecialchars($msg),'ip_addr'=>IP,'add_time'=>date('Y-m-d H:i:s')];
+		$data= ['admin_id'=>$_SESSION['admin_info']['id'],'route'=>Route::$privileges,'msg'=>htmlspecialchars($msg),'ip_addr'=>request()->ip(),'add_time'=>date('Y-m-d H:i:s')];
 		Db::table('admin_log')->insert($data);
 		return true;
 	}
@@ -113,7 +113,7 @@ class Controller{
      */
 	public function exception_log(string $msg){
 		$msg = mb_substr($msg,0,600);
-        $data= ['route'=>Route::$privileges,'msg'=>htmlspecialchars($msg),'ip_addr'=>IP,'add_time'=>date('Y-m-d H:i:s')];
+        $data= ['route'=>Route::$privileges,'msg'=>htmlspecialchars($msg),'ip_addr'=>request()->ip(),'add_time'=>date('Y-m-d H:i:s')];
         Db::table('admin_log')->insert($data);
         return true;
 	}

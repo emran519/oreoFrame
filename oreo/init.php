@@ -1,6 +1,7 @@
 <?php
 require(BASE_PATH . "oreo/common.php");
-define("IP",isset($_SERVER["HTTP_X_FORWARDED_FOR"]) ? $_SERVER["HTTP_X_FORWARDED_FOR"] : (isset($_SERVER['HTTP_CLIENT_IP']) ? $_SERVER['HTTP_CLIENT_IP'] : isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : "127.0.0.1"));
+//define("IP",isset($_SERVER["HTTP_X_FORWARDED_FOR"]) ? $_SERVER["HTTP_X_FORWARDED_FOR"] : (isset($_SERVER['HTTP_CLIENT_IP']) ? $_SERVER['HTTP_CLIENT_IP'] : isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : "127.0.0.1"));
+
 define("DATETIME",date("Y-m-d H:i:s"));
     \oreo\lib\Config::init();
     \oreo\lib\Config::get("app.debug") ? error_reporting(E_ALL | E_STRICT) : error_reporting(0);

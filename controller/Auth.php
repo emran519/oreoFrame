@@ -179,8 +179,8 @@ class Auth extends Controller
         $page = intval( (request()->get('page/d',1) - 1) * $limit);
         //分页查询
         $list = Db::table('auth_admin')->alias('a')
-            ->join('oreo_auth_role b')
-            ->where('a.role_id=b.id')
+            ->join('oreo_auth_role b','a.role_id = b.id')
+            //->where('a.role_id=b.id')
             ->field('a.id,b.id as role_id,a.username,a.gender,a.real_name,a.user_phone,a.user_email,a.state,a.create_time,b.role_name')
             ->limit($page,$limit)->all();
         //查询总数

@@ -12,7 +12,7 @@ return[
     // 强制pathInfo
     'path_info_only'=>false,
     //安全监测(如果触犯安全规则IP会被暂时拉黑，此功能需开启redis)
-    'safety' => true,
+    'safety' => false,
     //恶意操作触碰频率
     'safety_frequency' => 50,
     //密码盐
@@ -21,7 +21,7 @@ return[
     'session'=>[
         'state' => true,//是否开启session
         'expire'=>60*24*7,// 过期时间
-        'secure'=>false,//
+        'secure'=>false,//安全选项
         'name'=>"oreo",//session名称
     ],
     //Redis配置

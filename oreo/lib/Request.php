@@ -529,4 +529,49 @@ class Request
         return $this->input($this->param, $name, $default, $filter);
     }
 
+    /**
+     * 获取客户端IP地址
+     * @access public
+     * @param  integer   $type 返回类型 0 返回IP地址 1 返回IPV4地址数字
+     * @param  boolean   $adv 是否进行高级模式获取（有可能被伪装）
+     * @return mixed
+     */
+    public function ip($type = 0, $adv = true)
+    {
+        $type      = $type ? 1 : 0;
+        static $ip = null;
+        if (null !== $ip) {
+            return $ip[$type];
+        }
+        $httpAgentIp = 'HTTP_X_REAL_IP';
+        if ($httpAgentIp && $this->server($httpAgentIp)) {
+            $ip = $this->server($httpAgentIp);
+        } elseif ($adv) {
+            if ($this->server('HTTP_X_FORWARDED_FOR')) {
+                $arr = explode(',', $this->server('HTTP_X_FORWARDED_FOR'));
+                $pos = array_search('unknown', $arr);
+                if (false !== $pos) {
+                    unset($arr[$pos]);
+                }
+                $ip = trim(current($arr));
+            } elseif ($this->server('HTTP_CLIENT_IP')) {
+                $ip = $this->server('HTTP_CLIENT_IP');
+            } elseif ($this->server('REMOTE_ADDR')) {
+                $ip = $this->server('REMOTE_ADDR');
+            }
+        } elseif ($this->server('REMOTE_ADDR')) {
+            $ip = $this->server('REMOTE_ADDR');
+        }
+        // IP地址类型
+        $ip_mode = (strpos($ip, ':') === false) ? 'ipv4' : 'ipv6';
+        // IP地址合法验证
+        if (filter_var($ip, FILTER_VALIDATE_IP) !== $ip) {
+            $ip = ('ipv4' === $ip_mode) ? '0.0.0.0' : '::';
+        }
+        // 如果是ipv4地址，则直接使用ip2long返回int类型ip；如果是ipv6地址，暂时不支持，直接返回0
+        $long_ip = ('ipv4' === $ip_mode) ? sprintf("%u", ip2long($ip)) : 0;
+        $ip = [$ip, $long_ip];
+        return $ip[$type];
+    }
+
 }

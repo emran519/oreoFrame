@@ -21,7 +21,7 @@ class Db {
      * @return int
      */
     public static function lastInsertId() {
-        return (new Query(''))->lastinsertid();
+        return (new Query(''))->lastInsertId();
     }
 
     /**

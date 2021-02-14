@@ -349,7 +349,7 @@ class Query {
      * 上一个插入id
      * @return int
      */
-    public function lastinsertid() {
+    public function lastInsertId() {
         return self::$db->lastInsertId();
     }
 
