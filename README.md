@@ -100,7 +100,7 @@ wwwroot                    WEB部署目录（或者子目录）
 |   response_type   | html/json/xml  |     输出格式     |
 |  path_info_index  |   true/false   | 是否显示入口文件 |
 |  path_info_only   |   true/false   |   强制pathInfo   |
-|      safety       |   true/false   |     安全监测     |
+|      safety       |   true/false   |     安全监测(如需必须开启Redis)     |
 | safety_frequency  |  自定义(int)   | 恶意操作触碰频率 |
 |    admin_salt     | 自定义(string) |      密码盐      |
 | session['state']  |   true/false   | 是否开启session  |

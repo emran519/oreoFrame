@@ -23,7 +23,7 @@ class  SendClass{
     public $att = array(); //附件内容
     public $ssl = false;
 
-    public function __construct($relay_host = '', $smtp_port = 25, $auth = false, $user, $pass , $ssl = false) {
+    public function __construct($relay_host, $smtp_port, $user, $pass, $auth = false, $ssl = false) {
         $this ->debug = false;
         $this ->smtp_port = $smtp_port;
         if ($ssl == true) {
