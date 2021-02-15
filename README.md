@@ -19,7 +19,7 @@
 ## 1.安装
 
 ```git
-git clone https://github.com/emran519/oreoFrame of
+git clone https://github.com/emran519/oreoFrame
 ```
 
 你可以直接克隆到项目文件，或者打包下载到本地。
