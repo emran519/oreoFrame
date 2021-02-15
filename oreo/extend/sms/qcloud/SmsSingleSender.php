@@ -47,7 +47,6 @@ class SmsSingleSender
         $random = $this->util->getRandom();
         $curTime = time();
         $wholeUrl = $this->url . "?sdkappid=" . $this->appid . "&random=" . $random;
-
         // 按照协议组织 post 包体
         $data = new \stdClass();
         $tel = new \stdClass();
@@ -63,7 +62,6 @@ class SmsSingleSender
         $data->time = $curTime;
         $data->extend = $extend;
         $data->ext = $ext;
-
         return $this->util->sendCurlPost($wholeUrl, $data);
     }
 

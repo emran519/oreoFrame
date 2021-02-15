@@ -3,7 +3,6 @@
 
 namespace oreo\lib;
 
-
 class Request
 {
     /**
@@ -83,6 +82,12 @@ class Request
      * @var array
      */
     protected $put;
+
+    /**
+     * 当前FILE参数
+     * @var array
+     */
+    protected $file = [];
 
     /**
      * 获取
@@ -574,4 +579,86 @@ class Request
         return $ip[$type];
     }
 
+    /**
+     * 获取上传的文件信息
+     * @access public
+     * @param  string   $name 名称
+     * @return null|array|\oreo\lib\file\File
+     */
+    public function file($name = '')
+    {
+        if (empty($this->file)) {
+            $this->file = isset($_FILES) ? $_FILES : [];
+        }
+        $files = $this->file;
+        if (!empty($files)) {
+            if (strpos($name, '.')) {
+                list($name, $sub) = explode('.', $name);
+            }
+            // 处理上传文件
+            $array = $this->dealUploadFile($files, $name);
+            if ('' === $name) {
+                // 获取全部文件
+                return $array;
+            } elseif (isset($sub) && isset($array[$name][$sub])) {
+                return $array[$name][$sub];
+            } elseif (isset($array[$name])) {
+                return $array[$name];
+            }
+        }
+        return;
+    }
+
+    protected function dealUploadFile($files, $name)
+    {
+        $array = [];
+        foreach ($files as $key => $file) {
+            if ($file instanceof \oreo\lib\file\File) {
+                $array[$key] = $file;
+            } elseif (is_array($file['name'])) {
+                $item  = [];
+                $keys  = array_keys($file);
+                $count = count($file['name']);
+                for ($i = 0; $i < $count; $i++) {
+                    if ($file['error'][$i] > 0) {
+                        if ($name == $key) {
+                            $this->throwUploadFileError($file['error'][$i]);
+                        } else {
+                            continue;
+                        }
+                    }
+                    $temp['key'] = $key;
+                    foreach ($keys as $_key) {
+                        $temp[$_key] = $file[$_key][$i];
+                    }
+                    $item[] = (new \oreo\lib\file\File($temp['tmp_name']))->setUploadInfo($temp);
+                }
+                $array[$key] = $item;
+            } else {
+                if ($file['error'] > 0) {
+                    if ($key == $name) {
+                        $this->throwUploadFileError($file['error']);
+                    } else {
+                        continue;
+                    }
+                }
+                $array[$key] = (new \oreo\lib\file\File($file['tmp_name']))->setUploadInfo($file);
+            }
+        }
+        return $array;
+    }
+
+    protected function throwUploadFileError($error)
+    {
+        static $fileUploadErrors = [
+            1 => '上传文件大小超过最大值',
+            2 => '上传文件大小超过最大值',
+            3 => '只上传文件的一部分',
+            4 => '没有要上传的文件',
+            6 => '找不到上传临时目录',
+            7 => '文件写入错误',
+        ];
+        $msg = $fileUploadErrors[$error];
+        throw new Exception($msg);
+    }
 }

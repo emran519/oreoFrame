@@ -197,4 +197,3 @@ function view($tplPath=null,$data=null){
 function ctr($data){
     return __HOME__ .'/'. oreo\lib\Route::$controller . '/' . $data;
 }
-
