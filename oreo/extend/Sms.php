@@ -7,6 +7,7 @@ use oreo\extend\sms\qcloud\SmsSingleSender;
 use oreo\extend\sms\aliyun\AliSms;
 use oreo\extend\sms\sendmail\SendClass;
 
+
 class Sms
 {
     /**
@@ -92,9 +93,9 @@ class Sms
      *
      * @param string $phone 短信接受手机号码
      * @param string $param 数字验证码
-     * @return string|array
+     * @return mixed
      */
-    public function aliSmsParam(string $phone, string $param) : array
+    public function aliSmsParam(string $phone, string $param) : mixed
     {
         try {
             $res = self::$result->send_verify($phone, $param);
