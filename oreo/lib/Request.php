@@ -3,6 +3,13 @@
 
 namespace oreo\lib;
 
+/**
+ * Class Request
+ * 此类来自于ThinkPHP5
+ * 作者认为TP的request类目前很好用，所以写出更好的之前先引用TP的
+ * 同样作者也此类的基础上做出了一些更改
+ * @package oreo\lib
+ */
 class Request
 {
     /**
@@ -116,7 +123,6 @@ class Request
                 $header['content-length'] = $server['CONTENT_LENGTH'];
             }
         }
-
         $this->header = array_change_key_case($header);
         $this->server = $_SERVER;
         $this->get     = $_GET;
@@ -134,7 +140,6 @@ class Request
         } elseif (false !== strpos($contentType, 'json')) {
             return (array) json_decode($content, true);
         }
-
         return [];
     }
 
@@ -146,7 +151,6 @@ class Request
     public function contentType(): string
     {
         $contentType = $this->header('Content-Type');
-
         if ($contentType) {
             if (strpos($contentType, ';')) {
                 [$type] = explode(';', $contentType);
@@ -155,7 +159,6 @@ class Request
             }
             return trim($type);
         }
-
         return '';
     }
 
@@ -171,9 +174,7 @@ class Request
         if ('' === $name) {
             return $this->header;
         }
-
         $name = str_replace('_', '-', strtolower($name));
-
         return $this->header[$name] ?? $default;
     }
 
@@ -219,7 +220,6 @@ class Request
                 $this->method = $this->server('REQUEST_METHOD') ?: 'GET';
             }
         }
-
         return $this->method;
     }
 
@@ -234,37 +234,29 @@ class Request
      */
     public function input(array $data = [], $name = '', $default = null, $filter = '')
     {
-
         if (false === $name) {
             // 获取原始数据
             return $data;
         }
-
         $name = (string) $name;
         if ('' != $name) {
             // 解析name
             if (strpos($name, '/')) {
                 [$name, $type] = explode('/', $name);
             }
-
             $data = $this->getData($data, $name);
-
             if (is_null($data)) {
                 return $default;
             }
-
             if (is_object($data)) {
                 return $data;
             }
         }
-
         $data = $this->filterData($data, $filter, $name, $default);
-
         if (isset($type) && $data !== $default) {
             // 强制类型转换
             $this->typeCast($data, $type);
         }
-
         return $data;
     }
 
@@ -309,13 +301,11 @@ class Request
     {
         // 解析过滤器
         $filter = $this->getFilter($filter, $default);
-
         if (is_array($data)) {
             array_walk_recursive($data, [$this, 'filterValue'], $filter);
         } else {
             $this->filterValue($data, $name, $filter);
         }
-
         return $data;
     }
 
@@ -330,7 +320,6 @@ class Request
     public function filterValue(&$value, $key, $filters)
     {
         $default = array_pop($filters);
-
         foreach ($filters as $filter) {
             if (is_callable($filter)) {
                 // 调用函数或者方法过滤
@@ -370,9 +359,7 @@ class Request
                 $filter = (array) $filter;
             }
         }
-
         $filter[] = $default;
-
         return $filter;
     }
 
@@ -393,7 +380,6 @@ class Request
                 return $default;
             }
         }
-
         return $data;
     }
 
@@ -408,10 +394,8 @@ class Request
     public function only(array $name, $data = 'param', $filter = ''): array
     {
         $data = is_array($data) ? $data : $this->$data();
-
         $item = [];
         foreach ($name as $key => $val) {
-
             if (is_int($key)) {
                 $default = null;
                 $key     = $val;
@@ -421,10 +405,8 @@ class Request
             } else {
                 $default = $val;
             }
-
             $item[$key] = $this->filterData($data[$key] ?? $default, $filter, $key, $default);
         }
-
         return $item;
     }
 
@@ -441,7 +423,6 @@ class Request
         if (is_array($name)) {
             return $this->only($name, $this->post, $filter);
         }
-
         return $this->input($this->post, $name, $default, $filter);
     }
 
@@ -458,7 +439,6 @@ class Request
         if (is_array($name)) {
             return $this->only($name, $this->get, $filter);
         }
-
         return $this->input($this->get, $name, $default, $filter);
     }
 
@@ -475,7 +455,6 @@ class Request
         if (is_array($name)) {
             return $this->only($name, $this->put, $filter);
         }
-
         return $this->input($this->put, $name, $default, $filter);
     }
 
@@ -492,7 +471,6 @@ class Request
         if (is_array($name)) {
             return $this->only($name, $this->route, $filter);
         }
-
         return $this->input($this->route, $name, $default, $filter);
     }
 
@@ -523,14 +501,11 @@ class Request
             }
             // 当前请求参数和URL地址中的参数合并
             $this->param = array_merge($this->param, $this->get(false), $vars, $this->route(false));
-
             $this->mergeParam = true;
         }
-
         if (is_array($name)) {
             return $this->only($name, $this->param, $filter);
         }
-
         return $this->input($this->param, $name, $default, $filter);
     }
 

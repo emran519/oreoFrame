@@ -43,23 +43,18 @@ class Sms
      * @author 饼干<609451870@qq.com>
      * date : 2021/2/15 1:44
      *
-     * @param string $nationCode  国家码，如 86 为中国
-     * @param string $phoneNumber 不带国家码的手机号
-     * @param int    $tempId      模板 id
-     * @param string $param       模板参数列表，如模板 {1}...{2}...{3}，那么需要带三个参数
-     * @param string $sign        签名，如果填空串，系统会使用默认签名
-     * @return string|array       应答json字符串，详细内容参见腾讯云协议文档
+     * @param  int    $nationCode  国家码，如 86 为中国
+     * @param  string $phoneNumber 不带国家码的手机号
+     * @param  int    $tempId      模板 id
+     * @param  string $param       模板参数列表，如模板 {1}...{2}...{3}，那么需要带三个参数
+     * @param  string $sign        签名，如果填空串，系统会使用默认签名
+     * @return array|string        应答json字符串，详细内容参见腾讯云协议文档
      */
-    public function qCloudSmsParam(string $nationCode, string $phoneNumber, int $tempId, string $param, string $sign = "") : array
+    public function qCloudSmsParam(int $nationCode, string $phoneNumber, int $tempId, string $param, string $sign = "") : array
     {
-        $params = ["$param"];
-        try {
-            $res = self::$result->sendWithParam("$nationCode", $phoneNumber, $params, $tempId, $sign, "", "");
-            self::$result = null;
-            return json_decode($res,true);
-        } catch (\Exception $e) {
-            return json_decode($e->getMessage(),true);
-        }
+        $res = self::$result->sendWithParam($nationCode, $phoneNumber, (array)["$param"], $tempId, $sign, "", "");
+        self::$result = null;
+        return json_decode($res,true);
     }
 
     /**
@@ -93,17 +88,13 @@ class Sms
      *
      * @param string $phone 短信接受手机号码
      * @param string $param 数字验证码
-     * @return mixed
+     * @return bool
      */
-    public function aliSmsParam(string $phone, string $param) : mixed
+    public function aliSmsParam(string $phone, string $param) : bool
     {
-        try {
-            $res = self::$result->send_verify($phone, $param);
-            self::$result = null;
-            return json_decode($res,true);
-        } catch (\Exception $e) {
-            return json_decode($e->getMessage(),true);
-        }
+        $res = self::$result->send_verify($phone, $param);
+        self::$result = null;
+        return $res;
     }
 
     /**
